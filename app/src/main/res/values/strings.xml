@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Submission1INT</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="logout">Logout</string>
+    <string name="register_title">Halo, Welcome</string>
+    <string name="already_have_account">already have account?</string>
+    <string name="register_desc">register_desc</string>
+    <string name="dont_have_account">dont have account ?</string>
+    <string name="login_title">Hai, Welcome Back\n</string>
+    <string name="add_story" />
+</resources>
