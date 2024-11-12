@@ -33,7 +33,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-@Suppress("NAME_SHADOWING")
+@Suppress("NAME_SHADOWING", "SameParameterValue", "DEPRECATION")
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private lateinit var sharedPreferences: SharedPreferences
@@ -64,6 +64,14 @@ class AddStoryActivity : AppCompatActivity() {
         binding.buttonCamera.setOnClickListener { startCamera() }
         binding.buttonGallery.setOnClickListener { startGallery() }
         binding.buttonAdd.setOnClickListener { uploadStory() }
+    }
+
+    private fun animatePreviewImage() {
+        binding.previewImage.alpha = 0f
+        binding.previewImage.animate()
+            .alpha(1f)
+            .setDuration(500)
+            .start()
     }
 
     private val requestPermissionLauncher =
@@ -123,7 +131,6 @@ class AddStoryActivity : AppCompatActivity() {
         val chooser = Intent.createChooser(intent, "Choose a Picture")
         launcherIntentGallery.launch(chooser)
     }
-
     private val launcherIntentGallery = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -133,9 +140,10 @@ class AddStoryActivity : AppCompatActivity() {
                 val myFile = uriToFile(uri, this@AddStoryActivity)
                 getFile = myFile
                 binding.previewImage.setImageURI(uri)
+                animatePreviewImage()
             }
         }
-    }
+        }
 
     private fun uploadStory() {
         if (getFile == null) {

@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide
 import com.dicoding.submission1int.data.model.Story
 import com.dicoding.submission1int.databinding.ActivityDetailStoryBinding
 
+@Suppress("DEPRECATION")
 class DetailStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailStoryBinding
 

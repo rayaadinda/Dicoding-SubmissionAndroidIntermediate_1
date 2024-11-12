@@ -81,7 +81,7 @@ class RegisterActivity : AppCompatActivity() {
         val email = binding.edRegisterEmail.text.toString()
         val password = binding.edRegisterPassword.text.toString()
 
-        // Validasi input
+
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             return
@@ -95,7 +95,7 @@ class RegisterActivity : AppCompatActivity() {
         val registerRequest = RegisterRequest(name, email, password)
         val call = NetworkClient.apiInterface.registerUser(registerRequest)
 
-        // Tampilkan loading
+
         binding.btnRegister.isEnabled = false
 
         call.enqueue(object : Callback<RegisterResponse> {

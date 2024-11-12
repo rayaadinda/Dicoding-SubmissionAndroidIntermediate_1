@@ -1,6 +1,6 @@
 package com.dicoding.submission1int
 
-import StoryAdapter
+import com.dicoding.submission1int.data.adapter.StoryAdapter
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupFabAnimation() {
         binding.fabAdd.setOnClickListener {
-            // Rotate animation
+
             it.animate()
                 .rotation(360f)
                 .setDuration(500)

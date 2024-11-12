@@ -1,3 +1,6 @@
+package com.dicoding.submission1int.data.adapter
+
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +16,7 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
         this.onItemClickCallback = onItemClickCallback
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setStories(stories: List<Story>) {
         this.stories.clear()
         this.stories.addAll(stories)

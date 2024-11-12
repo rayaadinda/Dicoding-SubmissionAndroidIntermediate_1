@@ -1,6 +1,6 @@
 package com.dicoding.submission1int.ui.story
 
-import StoryAdapter
+import com.dicoding.submission1int.data.adapter.StoryAdapter
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
