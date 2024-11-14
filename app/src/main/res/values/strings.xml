@@ -12,4 +12,5 @@
     <string name="dont_have_account">dont have account ?</string>
     <string name="login_title">Hai, Welcome Back\n</string>
     <string name="add_story" />
+    <string name="show_map">Show Map</string>
 </resources>

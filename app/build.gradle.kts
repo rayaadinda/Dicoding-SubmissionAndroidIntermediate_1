@@ -65,4 +65,7 @@ dependencies {
     implementation (libs.glide)
     implementation (libs.androidx.recyclerview)
     implementation (libs.androidx.cardview)
+
+    //buat maps
+    implementation ("com.google.android.gms:play-services-maps:19.0.0")
 }

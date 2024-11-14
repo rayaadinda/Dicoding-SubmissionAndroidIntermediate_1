@@ -15,6 +15,7 @@ import com.dicoding.submission1int.data.model.StoryResponse
 import com.dicoding.submission1int.databinding.ActivityMainBinding
 import com.dicoding.submission1int.remote.NetworkClient
 import com.dicoding.submission1int.ui.LoginActivity
+import com.dicoding.submission1int.ui.maps.MapsActivity
 import com.dicoding.submission1int.ui.story.AddStoryActivity
 import com.dicoding.submission1int.ui.story.DetailStoryActivity
 import retrofit2.Call
@@ -73,6 +74,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_logout -> {
                 logout()
+                true
+            }
+            R.id.action_maps -> {
+                startActivity(Intent(this, MapsActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
