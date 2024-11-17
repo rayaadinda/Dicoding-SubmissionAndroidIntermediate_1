@@ -9,22 +9,25 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.submission1int.data.adapter.LoadingStateAdapter
 import com.dicoding.submission1int.data.model.Story
-import com.dicoding.submission1int.data.model.StoryResponse
+import com.dicoding.submission1int.data.repository.StoryRepository
 import com.dicoding.submission1int.databinding.ActivityMainBinding
 import com.dicoding.submission1int.remote.NetworkClient
 import com.dicoding.submission1int.ui.LoginActivity
 import com.dicoding.submission1int.ui.maps.MapsActivity
 import com.dicoding.submission1int.ui.story.AddStoryActivity
 import com.dicoding.submission1int.ui.story.DetailStoryActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.dicoding.submission1int.ui.story.StoryViewModel
+import com.dicoding.submission1int.ui.story.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var storyAdapter: StoryAdapter
+    private lateinit var viewModel: StoryViewModel
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +43,12 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+
+
+        setupViewModel()
         setupRecyclerView()
-        setupFabAnimation()
         getStories()
+        setupFabAnimation()
 
 
         binding.fabAdd.setOnClickListener {
@@ -51,6 +57,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupViewModel() {
+        val repository = StoryRepository(NetworkClient.apiInterface)
+        val factory = ViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
+    }
 
     private fun setupFabAnimation() {
         binding.fabAdd.setOnClickListener {
@@ -102,8 +113,25 @@ class MainActivity : AppCompatActivity() {
         storyAdapter = StoryAdapter()
         binding.rvStories.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = storyAdapter
-            setHasFixedSize(true)
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter { storyAdapter.retry() }
+            )
+        }
+
+
+        storyAdapter.addLoadStateListener { loadState ->
+
+            showLoading(loadState.source.refresh is LoadState.Loading)
+
+
+            val errorState = loadState.source.refresh as? LoadState.Error
+            errorState?.let {
+                Toast.makeText(
+                    this,
+                    "Error: ${it.error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         storyAdapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallback {
@@ -117,35 +145,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun getStories() {
         val token = sharedPreferences.getString("token", "") ?: ""
-        showLoading(true)
-
-        val call = NetworkClient.apiInterface.getStories("Bearer $token")
-        call.enqueue(object : Callback<StoryResponse> {
-            override fun onResponse(call: Call<StoryResponse>, response: Response<StoryResponse>) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    response.body()?.let { storyResponse ->
-                        if (!storyResponse.error) {
-                            storyAdapter.setStories(storyResponse.listStory)
-                        } else {
-                            Toast.makeText(this@MainActivity, storyResponse.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    Toast.makeText(this@MainActivity, "Failed to get stories", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
-                showLoading(false)
-                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        viewModel.getStories(token).observe(this) {
+            storyAdapter.submitData(lifecycle, it)
+        }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
+        private fun showLoading(isLoading: Boolean) {
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
 
     override fun onResume() {
         super.onResume()

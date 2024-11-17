@@ -23,6 +23,13 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<StoryResponse>
 
+    @GET("stories")
+    suspend fun getStoriesPaging(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): StoryResponse
+
     @Multipart
     @POST("stories")
     fun addStory(

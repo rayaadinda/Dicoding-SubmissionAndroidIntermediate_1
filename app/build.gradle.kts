@@ -67,5 +67,8 @@ dependencies {
     implementation (libs.androidx.cardview)
 
     //buat maps
-    implementation ("com.google.android.gms:play-services-maps:19.0.0")
+    implementation (libs.play.services.maps)
+
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.room.paging)
 }

@@ -32,7 +32,7 @@ class ListStoryActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("session", MODE_PRIVATE)
         setupRecyclerView()
-        getStories()
+
 
         binding.fabAdd.setOnClickListener {
             startActivity(Intent(this, AddStoryActivity::class.java))
@@ -81,33 +81,33 @@ class ListStoryActivity : AppCompatActivity() {
         })
     }
 
-    private fun getStories() {
-        val token = sharedPreferences.getString("token", "") ?: ""
-        showLoading(true)
-
-        val call = NetworkClient.apiInterface.getStories("Bearer $token")
-        call.enqueue(object : Callback<StoryResponse> {
-            override fun onResponse(call: Call<StoryResponse>, response: Response<StoryResponse>) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    response.body()?.let { storyResponse ->
-                        if (!storyResponse.error) {
-                            storyAdapter.setStories(storyResponse.listStory)
-                        } else {
-                            Toast.makeText(this@ListStoryActivity, storyResponse.message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    Toast.makeText(this@ListStoryActivity, "Failed to get stories", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
-                showLoading(false)
-                Toast.makeText(this@ListStoryActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
+//    private fun getStories() {
+//        val token = sharedPreferences.getString("token", "") ?: ""
+//        showLoading(true)
+//
+//        val call = NetworkClient.apiInterface.getStories("Bearer $token")
+//        call.enqueue(object : Callback<StoryResponse> {
+//            override fun onResponse(call: Call<StoryResponse>, response: Response<StoryResponse>) {
+//                showLoading(false)
+//                if (response.isSuccessful) {
+//                    response.body()?.let { storyResponse ->
+//                        if (!storyResponse.error) {
+//                            storyAdapter.setStories(storyResponse.listStory)
+//                        } else {
+//                            Toast.makeText(this@ListStoryActivity, storyResponse.message, Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                } else {
+//                    Toast.makeText(this@ListStoryActivity, "Failed to get stories", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
+//                showLoading(false)
+//                Toast.makeText(this@ListStoryActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+//            }
+//        })
+//    }
 
 
 
@@ -117,6 +117,6 @@ class ListStoryActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        getStories()
+
     }
 }
